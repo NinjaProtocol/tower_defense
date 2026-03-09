@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/lib/*": ["apps/web/src/lib/*"],
+      "@/components/*": ["apps/web/src/components/*"],
+      "@/game/*": ["apps/web/src/game/*"],
+      "@/wallet/*": ["apps/web/src/wallet/*"]
+    }
+  },
+  "include": [
+    "tests/**/*.ts",
+    "scripts/**/*.ts",
+    "apps/web/src/**/*.ts",
+    "apps/web/src/**/*.tsx"
+  ]
+}

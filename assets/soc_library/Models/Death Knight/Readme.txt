@@ -1,0 +1,1 @@
+In order for this model to function properly, you must import "Cape.mdx" and change it's path by removing the "war3mapimported\" part. The resulting path should be "Cape.mdx", without any prefix. 

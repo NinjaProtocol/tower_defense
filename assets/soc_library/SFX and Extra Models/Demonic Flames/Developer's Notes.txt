@@ -1,0 +1,1 @@
+SFX model for the Warlock's Demonic Flames ability. Similar to the Warlock's missile, but with a burning rock at its center.

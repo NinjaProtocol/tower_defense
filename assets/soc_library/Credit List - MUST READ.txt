@@ -1,0 +1,39 @@
+This list was made to make sure all resouce creators who worked on this pack will be properly credited when their work is used. 
+
+If you use any of the resouces in this pack, you MUST give credits to their respective creator.
+
+1) ALL icons: Mr.Goblin
+*3 icons were contributed by NFWar - those are MARKED AS SUCH IN THE ICONS FOLDER!
+2) ALL textures (with no exceptions): Mr.Goblin
+3) Alleria Model\Texture: Mr.Goblin, Pyramidhe@d
+4) Footman Model\Texture: Mr.Goblin, Deolrin
+5) Grunt Model\Texture: Mr.Goblin, Deolrin
+6) Gryphon Rider Model\Texture: Mr.Goblin, Pyramidhe@d, DonDustin
+7) Knight Model\Texture: Mr.Goblin, Deolrin, Pyramidhe@d
+8) Sir Anduin Lothar Model\Texture: Mr.Goblin, Pyramidhe@d
+9) Mathog of the Blackrock Clan Model\Texture: Mr.Goblin, Cavman, Deolrin
+10) Ogre Model\Texture: Mr.Goblin, Deolrin, Fan
+11) Ogre Mage Model\Texture: Mr.Goblin, Deolrin, Fan
+12) Paladin Model\Texture: Mr.Goblin, Deolrin, Pyramidhe@d
+13) Peasant Model\Texture: Mr.Goblin, Deolrin
+14) Peon Model\Texture: Mr.Goblin, Deolrin
+15) Troll Axethrower Model\Texture: Mr.Goblin, DonDustin
+16) Twilight's Hammer Banner Model\Texture: Mr.Goblin, Deolrin
+17) Assassin Model\Texture: Mr.Goblin, Deolrin
+18) Catapult Model\Texture: Mr.Goblin, Deolrin
+19) Concussive Mine Model\Texture: Mr.Goblin, Deolrin
+20) Death Knight Model\Texture: Mr.Goblin, Deolrin, Whitehorn, Pyramidhe@d
+21) Dragon Egg Model\Texture: Mr.Goblin, Deolrin
+22) Dragon Roost Model\Texture: Mr.Goblin, Deolrin
+23) Elven Ballista Model\Texture: Mr.Goblin, Deolrin
+24) Ogre Mauler Model\Texture: Mr.Goblin, Deolrin
+25) Skeleton Model\Texture: Mr.Goblin, Cavman, Deolrin
+26) Orc Transport Model\Texture: Mr.Goblin, Dmitry Rommel, Xaran Alamas
+27) Juggernaught Model\Texture: Mr.Goblin, Dmitry Rommel, Xaran Alamas
+28) War Turtle Model\Texture: Mr.Goblin, Deolrin
+29) Goblin Ace Model\Texture: Mr.Goblin, Deolrin
+30) Warlock Model\Texture: Mr.Goblin, DonDustin, Deolrin
+31) Troll Destroyer: Mr.Goblin, Deolrin
+32) Human Battleship: Pyramidhe@d
+33) Human Transport Ship: Pyramidhe@d
+34) All SFX & Bonus models: Deolrin

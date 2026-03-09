@@ -1,0 +1,1 @@
+SFX model for the Warlock's Weaken ability.

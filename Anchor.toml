@@ -1,0 +1,19 @@
+[toolchain]
+anchor_version = "0.31.0"
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.localnet]
+fortress_wars = "4J8koywfHEzdv7o2DLE1xajsLsBG1BbQp1RxuJqNf7m4"
+
+[provider]
+cluster = "Localnet"
+wallet = "~/.config/solana/id.json"
+
+[registry]
+url = "https://api.apr.dev"
+
+[scripts]
+test = "npm test"

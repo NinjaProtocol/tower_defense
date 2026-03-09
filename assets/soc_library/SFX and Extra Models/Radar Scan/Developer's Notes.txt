@@ -1,0 +1,2 @@
+SFX model for the Goblin Ace's Radar Scan ability.
+Contains spell cast effect and true sight buff.

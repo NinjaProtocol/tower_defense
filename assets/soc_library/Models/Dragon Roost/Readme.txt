@@ -1,0 +1,1 @@
+To use this model properly, you must import "OrcBirth.mdx" and set its path to "OrcBirth.mdx"(remove "war3mapimported\" from the path). 

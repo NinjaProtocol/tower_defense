@@ -1,0 +1,33 @@
+{
+  "name": "magicexperiment",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "build": "npm run build:program && npm run build:web",
+    "build:program": "anchor build",
+    "build:web": "npm run build --workspace web",
+    "lint": "tsc --noEmit && npm run lint --workspace web",
+    "test": "tsx tests/fortress-wars.spec.ts && tsx tests/replay-parity.spec.ts && tsx tests/multiplayer.spec.ts && tsx tests/settlement.spec.ts",
+    "replay": "tsx scripts/replay/rebuild-match.ts",
+    "devnet:deploy": "tsx scripts/devnet/deploy.ts",
+    "devnet:seed": "tsx scripts/devnet/seed.ts",
+    "devnet:match": "tsx scripts/devnet/run-sample-match.ts"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "0.31.0",
+    "@solana/spl-token": "^0.4.13",
+    "@solana/web3.js": "^1.98.0",
+    "bn.js": "^5.2.1",
+    "dotenv": "^16.4.7",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.6",
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

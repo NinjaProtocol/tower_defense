@@ -1,0 +1,2 @@
+SFX model for the Death Knight's Animate Corpse ability.
+Purple version of the WC3 Raise Corpse.

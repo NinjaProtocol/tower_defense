@@ -1,0 +1,1 @@
+This is the standard Warcraft 3 Human Shipyard with an added Birth (Build) animation, to fit the Human race.

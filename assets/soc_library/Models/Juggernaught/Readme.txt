@@ -1,0 +1,1 @@
+"JuggernaughtMissile.mdx" is the regular Juggernaught projectile model, whereas "JuggernaughtFireMissile.mdx" is an upgraded version of it. 

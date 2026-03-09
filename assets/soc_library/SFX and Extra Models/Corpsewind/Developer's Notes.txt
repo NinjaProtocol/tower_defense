@@ -1,0 +1,1 @@
+SFX model for the Death Knight's Tornado\Whirlwind\Corpsewind ability.

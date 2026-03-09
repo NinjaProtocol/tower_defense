@@ -1,0 +1,1 @@
+In order to make the Birth animation work, you must import "OrcBirth" and change it's path to "OrcBirth.mdx", WITHOUT the "war3mapimported\" prefix. The "OrcBirth" model is shared with the one used in the orc shipyard model.
