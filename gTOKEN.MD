@@ -26,7 +26,7 @@
 - Every match played causes:
   - Token supply to expand organically.
   - Liquidity pool to expand organically.
-  - Price to gradually increase due to the bonding-curve mechanics.
+  - Price to gradually increase due to the curve.
 - The liquidity pool itself generates fees that go to the game.
 - In addition, the game collects a small fee of 1 to 10 basis points in native tokens on every onchain action.
 - Over time this builds a treasury consisting of both stablecoins and gTOKEN.
