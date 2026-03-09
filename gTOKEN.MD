@@ -21,7 +21,7 @@
 
 ### 3. Token Design & Economic Model
 
-- gTOKEN is launched on a **flatish bonding curve**.
+- gTOKEN is launched on a **flatish curve**.
 - The curve is priced so that a basic game costs roughly ~$1, while players can add extra gTOKEN on top for larger wagers.
 - Every match played causes:
   - Token supply to expand organically.
@@ -34,8 +34,8 @@
 
 ### 4. TGE & Launch Mechanism
 
-- TGE is driven **purely through organic gameplay**. No traditional presale or VC raise is described.
-- Players buy gTOKEN to participate, and those purchases directly fill the bonding-curve liquidity pool.
+- TGE is driven **purely through organic gameplay**.
+- Players buy gTOKEN to participate, and those purchases directly fill the liquidity pool.
 - The same pool immediately serves as the exit liquidity for anyone to cash out gTOKEN back into stablecoins or whatever base asset is used.
 - Once the number of active users exceeds the initial flat-ish curve supply, TGE is considered essentially complete.
 - At that point the token enters **full price discovery**, where the market sets the price of the utility token.
