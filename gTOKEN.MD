@@ -51,3 +51,51 @@
 - That increased activity ultimately drives value back to the original program.
 - Early-snipe scenario: anyone could buy the entire supply at launch and "snipe it," in which case they would effectively own the game.
 - Counter-balance: if that holder charges too much or makes players unhappy, users can simply fork the program and create a new gTOKEN.
+
+### 6. The Law of gTOKEN – True Games Tokenization Philosophy
+
+g = game
+gTOKEN = game TOKEN
+game TOKEN = a token in a game
+
+Core Law of gTOKEN:
+If a game is truly tokenized, then if you remove any gTOKEN from the equation the game should no longer function.
+If you can remove the token features/integration from the game and it still functions, it is not a tokenized game, it is just uses cryptocurrencies.
+
+The Law Applied to Tower Defense Example:
+
+In the 3v3 tower defense (3 lanes, one fortress):
+Score itself = gTOKEN
+Units are spawned every 60s by paying gTOKEN cost
+Players can choose any lane (strategy)
+Buildings can be constructed at any time paying gTOKEN cost
+Units killed by towers reward gTOKEN
+If the fortress kills do not reward gTOKEN, there is effectively a burn on the gTOKEN (cost gTOKEN to send units but no gTOKEN rewarded)
+Without the SCORE in the game, there is no game
+Everything changes once you tokenize the SCORE into a token because the entire game is now tokenized and all the interactions now have economical impact on the tokenomics
+
+
+The Law Applied to StarCraft-style Resource Example:
+
+In StarCraft FFA with 6 players:
+All 6 players pool gTOKEN together equally
+gTOKENs are what minerals do in the current game
+Map is randomly created and gTOKEN is spread across map
+Now it is a real battle with real value on the line and it exchanges hands in real time onchain
+The resource is a gTOKEN and without the RESOURCE in the game, the game would also break
+
+
+SCORE/RESOURCE as gTOKEN Comparison:
+
+For RESOURCE you could just replace gTOKEN with USDC (maybe minerals = USDC and gas = SOL because it’s volatile gas).
+It’s effectively the same thing since all tokens are atomically swappable to any other tokens.
+But you can’t do much with USDC and SOL except wager with it.
+
+While with gTOKEN you can add layers of mechanics that add depth.
+
+Unlike SCORE, in the RESOURCE example: if the RESOURCE is simply nothing more than just a currency, it can just be nothing more than a stable currency like USDC.
+But both game formats respect the law of gTOKEN — the game breaks without the gTOKEN.
+
+Closing Statement
+Just imagine if tokenizing games was actually about tokenizing games.
+
