@@ -566,6 +566,9 @@ The implementation is ready for review on devnet only when all of the following 
 - Validated `npm run lint`, `npm test`, `npm run replay`, `npm run build`, `npm run build:web`, `npm run build:program`, and `anchor build` successfully.
 - Identified the only previous deployment blocker as wallet funding and have now been provided a funded local devnet keypair for live deployment.
 - Current milestone work extends the game theme toward Warcraft I style Humans versus Orcs, adds a dedicated frontend demo mode, and executes the devnet plan using the provided wallet.
+- Phase 5 adds Warcraft audio plus terrain assets, SOC unit and building preview art, explicit top/middle/bottom lane controls, tower tile selection, and deterministic 60-second lane waves with queued paid-unit spawns.
+- The onchain program now records and resolves queued lane spawns deterministically, and the devnet replay path has been verified against a real match with `72` onchain action records.
+- Verified devnet Phase 5 match: match id `1`, match account `AiT94MkeG1sYvqhwb5Mq5PjZp3VwebVqSuK6waPP39D9`, action log `FTDtohvKWf71vtnkz6rQcuRPZrbSBhkNUDJaifXFMEJs`, replay parity confirmed.
 
 ## Repository File Summary
 
@@ -580,6 +583,8 @@ The implementation is ready for review on devnet only when all of the following 
 - `package-lock.json`: Locked Node dependency graph for reproducible installs.
 - `tsconfig.json`: Shared TypeScript compiler settings for tests, scripts, and client code.
 - `docs/DEVNET.md`: Devnet runbook for deployment, seeding, and sample-match execution.
+- `docs/DEVNET_P5_UPDATE_PLAN.md`: Phase 5 implementation plan covering assets, wave logic, and replay validation.
+- `docs/DEVNET_P5_UPDATE.md`: Phase 5 completion summary with real devnet outputs and replay-view instructions.
 - `programs/fortress_wars/Cargo.toml`: Onchain program crate definition and Anchor dependency configuration.
 - `programs/fortress_wars/src/lib.rs`: Core Solana game program implementing economy, deterministic combat, replay data, and settlement.
 - `scripts/devnet/deploy.ts`: Devnet deployment automation for building and deploying the compiled program.
@@ -587,6 +592,7 @@ The implementation is ready for review on devnet only when all of the following 
 - `scripts/devnet/run-sample-match.ts`: Executes a scripted devnet sample match end to end and prints resulting state.
 - `scripts/devnet/shared.ts`: Shared devnet helpers for wallet resolution, PDA derivation, minting, transfers, and provider setup.
 - `scripts/replay/rebuild-match.ts`: Reconstructs a match using the deterministic TypeScript replay model.
+- `scripts/replay/replay-devnet-match.ts`: Fetches a devnet match, reconstructs it from onchain records, and verifies replay parity.
 - `tests/fortress-wars.spec.ts`: Sanity-checks the base catalog and project assumptions.
 - `tests/multiplayer.spec.ts`: Verifies the multiplayer roster model supports the required two teams of up to three players.
 - `tests/replay-parity.spec.ts`: Confirms replay reconstruction matches manual simulation.
@@ -603,6 +609,7 @@ The implementation is ready for review on devnet only when all of the following 
 - `apps/web/src/game/GameCanvas.tsx`: React wrapper around the Phaser renderer.
 - `apps/web/src/game/phaserScene.ts`: Phaser scene that renders the battlefield, fortresses, units, and towers.
 - `apps/web/src/lib/catalog.ts`: Shared gameplay catalog and theme metadata for units, towers, and factions.
+- `apps/web/src/lib/assets.ts`: Shared Warcraft and SOC asset paths used by the frontend.
 - `apps/web/src/lib/magicblock.ts`: Dual-connection factory for Solana base layer and MagicBlock endpoints.
 - `apps/web/src/lib/matchEngine.ts`: Shared deterministic simulation and replay logic used by the frontend and tests.
 - `apps/web/src/lib/program.ts`: Shared client-side program id and PDA helpers.

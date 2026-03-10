@@ -12,6 +12,7 @@
     "lint": "tsc --noEmit && npm run lint --workspace web",
     "test": "tsx tests/fortress-wars.spec.ts && tsx tests/replay-parity.spec.ts && tsx tests/multiplayer.spec.ts && tsx tests/settlement.spec.ts",
     "replay": "tsx scripts/replay/rebuild-match.ts",
+    "replay:devnet": "tsx scripts/replay/replay-devnet-match.ts",
     "devnet:deploy": "tsx scripts/devnet/deploy.ts",
     "devnet:seed": "tsx scripts/devnet/seed.ts",
     "devnet:match": "tsx scripts/devnet/run-sample-match.ts"

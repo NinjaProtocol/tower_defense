@@ -17,11 +17,14 @@ npm run devnet:deploy
 ```bash
 npm run devnet:seed
 npm run devnet:match
+npm run replay:devnet -- 1
 ```
 
 The seed step creates a new SPL mint and initializes the canonical game config if one does not already exist.
 
-The sample match step funds a second ephemeral player on devnet, mints test tokens for both players, creates a match, joins both teams, starts the match, executes unit and tower actions, advances ticks, and prints the resulting match state and replay log size.
+The sample match step funds a second ephemeral player on devnet, mints test tokens for both players, creates a match, joins both teams, starts the match, executes three-lane queue and tower actions, advances ticks, and prints the resulting match state and replay log size.
+
+The replay step fetches the onchain records for the specified match id, reconstructs the match deterministically, and verifies replay parity against the live onchain state.
 
 ## Production readiness checklist
 

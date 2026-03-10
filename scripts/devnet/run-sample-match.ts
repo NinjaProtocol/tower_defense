@@ -120,6 +120,20 @@ async function main() {
 		.rpc();
 
 	await program.methods
+		.deployUnit(1, 1)
+		.accountsPartial({
+			player: creator,
+			gameConfig,
+			matchAccount,
+			playerState: creatorPlayerState,
+			actionLog,
+			playerTokenAccount: creatorAta.address,
+			matchVault,
+			tokenProgram: sharedAccounts.tokenProgram,
+		})
+		.rpc();
+
+	await program.methods
 		.buildTower(0, 0, 0)
 		.accountsPartial({
 			player: opponent.publicKey,
@@ -135,7 +149,36 @@ async function main() {
 		.rpc();
 
 	await program.methods
-		.advanceTick(8)
+		.buildTower(1, 2, 1)
+		.accountsPartial({
+			player: creator,
+			gameConfig,
+			matchAccount,
+			playerState: creatorPlayerState,
+			actionLog,
+			playerTokenAccount: creatorAta.address,
+			matchVault,
+			tokenProgram: sharedAccounts.tokenProgram,
+		})
+		.rpc();
+
+	await program.methods
+		.deployUnit(0, 2)
+		.accountsPartial({
+			player: opponent.publicKey,
+			gameConfig,
+			matchAccount,
+			playerState: opponentPlayerState,
+			actionLog,
+			playerTokenAccount: opponentAta.address,
+			matchVault,
+			tokenProgram: sharedAccounts.tokenProgram,
+		})
+		.signers([opponent])
+		.rpc();
+
+	await program.methods
+		.advanceTick(65)
 		.accountsPartial({
 			tickAuthority: creator,
 			gameConfig,
@@ -163,6 +206,9 @@ async function main() {
 		matchPhase: matchState.phase,
 		tick: matchState.currentTick.toString(),
 		fortressHp: matchState.fortressHp.map((value: BN) => value.toString()),
+		pendingSpawns: matchState.pendingSpawns.length,
+		units: matchState.units.length,
+		towers: matchState.towers.length,
 		actionsRecorded: actionLogState.records.length,
 		tokenMint: formatPublicKey(tokenMint),
 		unitCatalog: defaultConfigArgs.unitKinds.length,

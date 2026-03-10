@@ -9,12 +9,15 @@ const TEAM_COUNT: usize = 2;
 const MAX_PLAYERS: usize = 6;
 const MAX_UNIT_KINDS: usize = 4;
 const MAX_TOWER_KINDS: usize = 4;
-const MAX_UNITS: usize = 32;
+const MAX_UNITS: usize = 96;
 const MAX_TOWERS: usize = 16;
+const MAX_PENDING_SPAWNS: usize = 48;
 const MAX_ACTIONS: usize = 128;
 const FORTRESS_POSITION_START: u16 = 0;
 const FORTRESS_POSITION_END: u16 = 100;
 const CHECKPOINT_INTERVAL: u64 = 5;
+const WAVE_INTERVAL_TICKS: u64 = 60;
+const BASE_WAVE_UNIT_KIND: u8 = 0;
 const TEAM_UNSET: u8 = 255;
 const PHASE_LOBBY: u8 = 0;
 const PHASE_LIVE: u8 = 1;
@@ -22,7 +25,7 @@ const PHASE_FINISHED: u8 = 2;
 const ACTION_MATCH_CREATED: u8 = 0;
 const ACTION_PLAYER_JOINED: u8 = 1;
 const ACTION_MATCH_STARTED: u8 = 2;
-const ACTION_UNIT_DEPLOYED: u8 = 3;
+const ACTION_UNIT_QUEUED: u8 = 3;
 const ACTION_TOWER_BUILT: u8 = 4;
 const ACTION_TICK_ADVANCED: u8 = 5;
 const ACTION_UNIT_KILLED: u8 = 6;
@@ -30,6 +33,9 @@ const ACTION_TOWER_DESTROYED: u8 = 7;
 const ACTION_FORTRESS_HIT: u8 = 8;
 const ACTION_MATCH_SETTLED: u8 = 9;
 const ACTION_CHECKPOINT_WRITTEN: u8 = 10;
+const ACTION_UNIT_SPAWNED: u8 = 11;
+const SPAWN_SOURCE_BASE: u8 = 0;
+const SPAWN_SOURCE_QUEUED: u8 = 1;
 
 #[program]
 pub mod fortress_wars {
@@ -87,6 +93,7 @@ pub mod fortress_wars {
         match_account.next_tower_id = 0;
         match_account.units = Vec::new();
         match_account.towers = Vec::new();
+        match_account.pending_spawns = Vec::new();
         match_account.reward_pool_seeded = args.initial_reward_pool;
 
         let action_log = &mut ctx.accounts.action_log;
@@ -161,6 +168,7 @@ pub mod fortress_wars {
     }
 
     pub fn start_match(ctx: Context<StartMatch>) -> Result<()> {
+        let config = &ctx.accounts.game_config;
         let match_account = &mut ctx.accounts.match_account;
         require!(match_account.phase == PHASE_LOBBY, FortressError::InvalidPhase);
         require!(match_account.team_player_counts[0] > 0 && match_account.team_player_counts[1] > 0, FortressError::TeamsNotReady);
@@ -175,6 +183,7 @@ pub mod fortress_wars {
             0,
             0,
         )?;
+        spawn_wave(config, match_account, &mut ctx.accounts.action_log)?;
         write_checkpoint(match_account, &mut ctx.accounts.checkpoint, &mut ctx.accounts.action_log)?;
         Ok(())
     }
@@ -187,7 +196,7 @@ pub mod fortress_wars {
         require!(lane < match_account.lane_count, FortressError::InvalidLane);
         require!(player_state.joined, FortressError::UnauthorizedPlayer);
         require!(player_state.match_account == match_account.key(), FortressError::WrongMatch);
-        require!(match_account.units.len() < MAX_UNITS, FortressError::EntityCapacityReached);
+        require!(match_account.pending_spawns.len() < MAX_PENDING_SPAWNS, FortressError::SpawnQueueFull);
 
         let definition = config.unit_kinds.iter().find(|kind| kind.id == unit_kind).ok_or(FortressError::UnknownUnitKind)?;
         transfer_tokens(
@@ -199,20 +208,12 @@ pub mod fortress_wars {
             None,
         )?;
 
-        let position = if player_state.team == 0 { FORTRESS_POSITION_START } else { FORTRESS_POSITION_END };
-        let next_unit_id = match_account.next_unit_id;
-        match_account.units.push(UnitInstance {
-            id: next_unit_id,
+        match_account.pending_spawns.push(SpawnIntent {
             owner: ctx.accounts.player.key(),
             team: player_state.team,
             lane,
             kind: unit_kind,
-            position,
-            hp: definition.health,
-            cooldown: 0,
-            alive: true,
         });
-        match_account.next_unit_id = match_account.next_unit_id.checked_add(1).ok_or(FortressError::MathOverflow)?;
         player_state.total_spent = player_state.total_spent.checked_add(definition.cost).ok_or(FortressError::MathOverflow)?;
 
         append_action(
@@ -220,7 +221,7 @@ pub mod fortress_wars {
             &mut ctx.accounts.action_log,
             ctx.accounts.player.key(),
             player_state.team,
-            ACTION_UNIT_DEPLOYED,
+            ACTION_UNIT_QUEUED,
             lane as u16,
             unit_kind as u16,
             definition.cost,
@@ -286,6 +287,9 @@ pub mod fortress_wars {
 
         for _ in 0..ticks {
             match_account.current_tick = match_account.current_tick.checked_add(1).ok_or(FortressError::MathOverflow)?;
+            if match_account.current_tick % WAVE_INTERVAL_TICKS == 0 {
+                spawn_wave(config, match_account, &mut ctx.accounts.action_log)?;
+            }
             resolve_towers(
                 config,
                 match_account,
@@ -644,10 +648,11 @@ pub struct MatchAccount {
     pub reward_pool_seeded: u64,
     pub units: Vec<UnitInstance>,
     pub towers: Vec<TowerInstance>,
+    pub pending_spawns: Vec<SpawnIntent>,
 }
 
 impl MatchAccount {
-    pub const SPACE: usize = 8 + 1 + 8 + 32 + 32 + 1 + 1 + 8 + 8 + 4 + 1 + 1 + TEAM_COUNT + (32 * MAX_PLAYERS) + MAX_PLAYERS + (8 * TEAM_COUNT) + 4 + 4 + 8 + 4 + (MAX_UNITS * UnitInstance::SIZE) + 4 + (MAX_TOWERS * TowerInstance::SIZE);
+    pub const SPACE: usize = 8 + 1 + 8 + 32 + 32 + 1 + 1 + 8 + 8 + 4 + 1 + 1 + TEAM_COUNT + (32 * MAX_PLAYERS) + MAX_PLAYERS + (8 * TEAM_COUNT) + 4 + 4 + 8 + 4 + (MAX_UNITS * UnitInstance::SIZE) + 4 + (MAX_TOWERS * TowerInstance::SIZE) + 4 + (MAX_PENDING_SPAWNS * SpawnIntent::SIZE);
 }
 
 #[account]
@@ -754,6 +759,18 @@ impl TowerInstance {
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug, PartialEq)]
+pub struct SpawnIntent {
+    pub owner: Pubkey,
+    pub team: u8,
+    pub lane: u8,
+    pub kind: u8,
+}
+
+impl SpawnIntent {
+    pub const SIZE: usize = 32 + 1 + 1 + 1;
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug, PartialEq)]
 pub struct ActionRecord {
     pub sequence: u64,
     pub tick: u64,
@@ -820,6 +837,7 @@ fn calculate_match_hash(match_account: &MatchAccount) -> [u8; 32] {
     data.extend_from_slice(&match_account.fortress_hp[1].to_le_bytes());
     data.extend_from_slice(&(match_account.units.len() as u64).to_le_bytes());
     data.extend_from_slice(&(match_account.towers.len() as u64).to_le_bytes());
+    data.extend_from_slice(&(match_account.pending_spawns.len() as u64).to_le_bytes());
     for unit in &match_account.units {
         data.extend_from_slice(&unit.id.to_le_bytes());
         data.extend_from_slice(unit.owner.as_ref());
@@ -842,7 +860,82 @@ fn calculate_match_hash(match_account: &MatchAccount) -> [u8; 32] {
         data.push(tower.cooldown);
         data.push(tower.alive as u8);
     }
+    for spawn in &match_account.pending_spawns {
+        data.extend_from_slice(spawn.owner.as_ref());
+        data.push(spawn.team);
+        data.push(spawn.lane);
+        data.push(spawn.kind);
+    }
     hashv(&[&data]).to_bytes()
+}
+
+fn spawn_wave(config: &GameConfig, match_account: &mut MatchAccount, action_log: &mut Account<ActionLog>) -> Result<()> {
+    let base_definition = config
+        .unit_kinds
+        .iter()
+        .find(|kind| kind.id == BASE_WAVE_UNIT_KIND)
+        .ok_or(FortressError::UnknownUnitKind)?
+        .clone();
+
+    let mut remaining = std::mem::take(&mut match_account.pending_spawns);
+    for team in 0..TEAM_COUNT as u8 {
+        let base_owner = first_player_for_team(match_account, team).ok_or(FortressError::TeamsNotReady)?;
+        for lane in 0..match_account.lane_count {
+            spawn_unit_instance(match_account, action_log, base_owner, team, lane, &base_definition, SPAWN_SOURCE_BASE)?;
+            let mut next_remaining = Vec::new();
+            for pending in remaining.into_iter() {
+                if pending.team == team && pending.lane == lane {
+                    let definition = config
+                        .unit_kinds
+                        .iter()
+                        .find(|kind| kind.id == pending.kind)
+                        .ok_or(FortressError::UnknownUnitKind)?
+                        .clone();
+                    spawn_unit_instance(match_account, action_log, pending.owner, team, lane, &definition, SPAWN_SOURCE_QUEUED)?;
+                } else {
+                    next_remaining.push(pending);
+                }
+            }
+            remaining = next_remaining;
+        }
+    }
+    match_account.pending_spawns = remaining;
+    Ok(())
+}
+
+fn spawn_unit_instance(
+    match_account: &mut MatchAccount,
+    action_log: &mut Account<ActionLog>,
+    owner: Pubkey,
+    team: u8,
+    lane: u8,
+    definition: &UnitDefinition,
+    source: u8,
+) -> Result<()> {
+    require!(match_account.units.len() < MAX_UNITS, FortressError::EntityCapacityReached);
+    let next_unit_id = match_account.next_unit_id;
+    match_account.units.push(UnitInstance {
+        id: next_unit_id,
+        owner,
+        team,
+        lane,
+        kind: definition.id,
+        position: initial_unit_position(team),
+        hp: definition.health,
+        cooldown: 0,
+        alive: true,
+    });
+    match_account.next_unit_id = match_account.next_unit_id.checked_add(1).ok_or(FortressError::MathOverflow)?;
+    append_action(
+        match_account,
+        action_log,
+        owner,
+        team,
+        ACTION_UNIT_SPAWNED,
+        lane as u16,
+        ((definition.id as u16) << 8) | source as u16,
+        next_unit_id as u64,
+    )
 }
 
 fn resolve_towers<'info>(
@@ -1071,6 +1164,15 @@ fn first_open_player_slot(match_account: &MatchAccount) -> Option<usize> {
     match_account.players.iter().position(|member| *member == Pubkey::default())
 }
 
+fn first_player_for_team(match_account: &MatchAccount, team: u8) -> Option<Pubkey> {
+    match_account
+        .players
+        .iter()
+        .zip(match_account.player_teams.iter())
+        .find(|(player, assigned_team)| **player != Pubkey::default() && **assigned_team == team)
+        .map(|(player, _)| *player)
+}
+
 fn tower_slot_occupied(match_account: &MatchAccount, team: u8, lane: u8, slot: u8) -> bool {
     match_account
         .towers
@@ -1115,6 +1217,10 @@ fn opposing_team(team: u8) -> u8 {
 
 fn is_at_enemy_fortress(team: u8, position: u16) -> bool {
     if team == 0 { position >= FORTRESS_POSITION_END } else { position <= FORTRESS_POSITION_START }
+}
+
+fn initial_unit_position(team: u8) -> u16 {
+    if team == 0 { FORTRESS_POSITION_START } else { FORTRESS_POSITION_END }
 }
 
 fn move_unit(unit: &mut UnitInstance, speed: u16) {
@@ -1177,6 +1283,8 @@ pub enum FortressError {
     ActionLogFull,
     #[msg("The number of ticks must be positive.")]
     InvalidTickCount,
+    #[msg("The pending spawn queue is full.")]
+    SpawnQueueFull,
     #[msg("A reward destination token account was not provided.")]
     MissingRewardDestination,
     #[msg("The match has already been settled.")]

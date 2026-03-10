@@ -61,6 +61,14 @@ export interface ActionRecord {
   amount: number;
 }
 
+export interface QueuedSpawn {
+  actor: string;
+  team: TeamId;
+  lane: number;
+  kind: number;
+  queuedTick: number;
+}
+
 export interface MatchSnapshot {
   matchId: number;
   phase: MatchPhase;
@@ -72,12 +80,15 @@ export interface MatchSnapshot {
   playerTeams: Record<string, TeamId>;
   units: UnitInstance[];
   towers: TowerInstance[];
+  pendingSpawns: QueuedSpawn[];
   actionLog: ActionRecord[];
 }
 
 export interface EngineConfig {
   fortressHealth: number;
   laneCount: number;
+  waveIntervalTicks: number;
+  baseUnitKind: number;
   units: UnitDefinition[];
   towers: TowerDefinition[];
 }
@@ -104,4 +115,15 @@ export interface BuildAction {
   towerKind: number;
   lane: number;
   slot: number;
+}
+
+export interface OnchainReplayRecord {
+  sequence: number;
+  tick: number;
+  actor: string;
+  team: number;
+  actionType: number;
+  primary: number;
+  secondary: number;
+  amount: number;
 }

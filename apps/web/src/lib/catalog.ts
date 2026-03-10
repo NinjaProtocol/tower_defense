@@ -3,6 +3,8 @@ import type { EngineConfig, FactionTheme, TeamId } from "./types";
 export const defaultCatalog: EngineConfig = {
   fortressHealth: 100,
   laneCount: 3,
+  waveIntervalTicks: 60,
+  baseUnitKind: 0,
   units: [
     { id: 0, label: "Worker", cost: 5, reward: 2, health: 18, damage: 4, range: 8, speed: 6, fortressDamage: 8, cooldownTicks: 1 },
     { id: 1, label: "Frontline", cost: 9, reward: 4, health: 32, damage: 6, range: 10, speed: 4, fortressDamage: 10, cooldownTicks: 2 },
@@ -13,6 +15,8 @@ export const defaultCatalog: EngineConfig = {
     { id: 1, label: "Cannon Tower", cost: 14, reward: 7, health: 34, damage: 8, range: 18, attackCooldown: 2 },
   ],
 };
+
+export const laneLabels = ["Top", "Middle", "Bottom"];
 
 export const factionThemes: Record<TeamId, FactionTheme> = {
   0: {
